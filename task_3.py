@@ -5,7 +5,7 @@ import string
 from collections import defaultdict
 
 
-def kmp_search(pattern, text):
+def knuth_morris_pratt_search(pattern, text):
     def compute_lps(pattern):
         lps = [0] * len(pattern)
         length = 0
@@ -102,8 +102,8 @@ non_existing_substring = "".join(random.choices(string.ascii_letters, k=20))
 
 results = defaultdict(dict)
 for algo, func in zip(
-    ["KMP", "Boyer-Moore", "Rabin-Karp"],
-    [kmp_search, boyer_moore_search, rabin_karp_search],
+    ["Knuth-Morris-Pratt", "Boyer-Moore", "Rabin-Karp"],
+    [knuth_morris_pratt_search, boyer_moore_search, rabin_karp_search],
 ):
     results[algo]["Article 1 - Existing"] = measure_time(
         func, existing_substring, text1
@@ -118,8 +118,21 @@ for algo, func in zip(
         func, non_existing_substring, text2
     )
 
-for category in results[list(results.keys())[0]].keys():
-    fastest_algo = min(results, key=lambda algo: results[algo][category])
-    print(
-        f"Fastest for {category}: {fastest_algo} ({results[fastest_algo][category]:.6f} sec)"
-    )
+
+print("=== Article 1 Results ===")
+print("Existing Substring:")
+for algo in results:
+    print(f"{algo}: {results[algo]['Article 1 - Existing']:.6f} sec")
+print("\nNon-existing Substring:")
+for algo in results:
+    print(f"{algo}: {results[algo]['Article 1 - Non-existing']:.6f} sec")
+print("\n")
+
+print("=== Article 2 Results ===")
+print("Existing Substring:")
+for algo in results:
+    print(f"{algo}: {results[algo]['Article 2 - Existing']:.6f} sec")
+print("\nNon-existing Substring:")
+for algo in results:
+    print(f"{algo}: {results[algo]['Article 2 - Non-existing']:.6f} sec")
+print()
